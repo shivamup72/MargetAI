@@ -1,0 +1,235 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    background-color: #f2f8fd;
+  }
+
+  body {
+    @apply text-slate-800 antialiased font-sans selection:bg-indigo-100 selection:text-indigo-900;
+    min-height: 100vh;
+    min-height: 100dvh;
+    /* Minor sky-blue canvas: pale sky at the top easing into a near-white blue */
+    background-color: #f2f8fd;
+    background-image:
+      radial-gradient(60rem 26rem at 85% -8rem, rgba(125, 211, 252, 0.22), transparent 65%),
+      radial-gradient(50rem 24rem at 0% 0%, rgba(186, 230, 253, 0.35), transparent 60%),
+      linear-gradient(180deg, #eaf5fd 0%, #f2f8fd 35%, #f5f9fc 100%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+
+  /* ---------- App-like behaviour on touch devices ---------- */
+  @media (max-width: 1023px) {
+    html,
+    body {
+      overscroll-behavior-y: none; /* no rubber-band bounce / pull-to-refresh */
+    }
+
+    body {
+      /* iOS ignores background-attachment: fixed; keep the tint anchored to the top */
+      background-attachment: scroll;
+    }
+
+    /* Controls behave like native UI: no text selection or long-press callout */
+    button,
+    a,
+    nav,
+    [role='tab'],
+    [role='menuitem'] {
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    /* Prevent iOS auto-zoom when focusing a field */
+    input,
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+
+  /* Thin outline focus ring */
+  :focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* ---------- Surfaces: crisp white 'executive' cards ---------- */
+  .card {
+    @apply relative bg-white rounded-xl border border-slate-200 shadow-[0_1px_3px_0_rgba(15,23,42,0.04),0_1px_2px_-1px_rgba(15,23,42,0.04)] transition-shadow duration-200 hover:shadow-[0_4px_16px_-2px_rgba(15,23,42,0.08),0_2px_6px_-2px_rgba(15,23,42,0.04)];
+  }
+
+  .card-interactive {
+    @apply transition-[transform,box-shadow,border-color,background-color] duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.985];
+  }
+
+  .card-header {
+    @apply flex flex-wrap items-center justify-between gap-3;
+  }
+
+  .card-title {
+    @apply font-display text-base font-bold text-slate-900 tracking-tight;
+  }
+
+  .card-subtitle {
+    @apply text-xs text-slate-500 mt-0.5;
+  }
+
+  .eyebrow {
+    @apply text-[11px] font-bold uppercase tracking-wider text-slate-900;
+  }
+
+  /* Tinted icon tile with a hairline border, e.g. <span class="icon-chip"> */
+  .icon-chip {
+    @apply w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-indigo-50 text-indigo-600 border border-indigo-100;
+  }
+
+  .hairline-top {
+    background: linear-gradient(90deg, transparent 0%, rgba(99, 102, 241, 0.6) 35%, rgba(6, 182, 212, 0.6) 65%, transparent 100%);
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg text-sm font-semibold transition-all duration-200 ease-out active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  /* Primary: indigo → purple with a soft indigo glow and a lift on hover */
+  .btn-primary {
+    @apply btn px-5 py-2.5 text-white bg-gradient-to-r from-indigo-600 via-indigo-600 to-purple-600 shadow-[0_4px_14px_0_rgba(79,70,229,0.3)] hover:shadow-[0_6px_20px_0_rgba(79,70,229,0.45)] hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  .btn-outline {
+    @apply btn px-4 py-2.5 text-slate-800 font-medium bg-white hover:bg-slate-50 border border-slate-300 shadow-[0_1px_2px_rgba(15,23,42,0.04)];
+  }
+
+  .btn-soft {
+    @apply btn px-3 py-1.5 text-indigo-700 bg-indigo-50 hover:bg-indigo-100;
+  }
+
+  /* ---------- Segmented control ---------- */
+  .segmented {
+    @apply inline-flex items-center gap-0.5 p-1 rounded-lg bg-slate-100 border border-slate-200 text-xs;
+  }
+
+  .segmented-item {
+    @apply px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900 transition-colors duration-150 whitespace-nowrap;
+  }
+
+  .segmented-item-active {
+    @apply bg-white text-indigo-700 font-semibold shadow-[0_1px_2px_rgba(15,23,42,0.06)];
+  }
+
+  /* ---------- Entrance: direct children rise in sequence ---------- */
+  .stagger > * {
+    @apply animate-rise;
+  }
+  .stagger > *:nth-child(2) { animation-delay: 60ms; }
+  .stagger > *:nth-child(3) { animation-delay: 120ms; }
+  .stagger > *:nth-child(4) { animation-delay: 180ms; }
+  .stagger > *:nth-child(5) { animation-delay: 240ms; }
+  .stagger > *:nth-child(6) { animation-delay: 300ms; }
+  .stagger > *:nth-child(n + 7) { animation-delay: 340ms; }
+
+  /* ---------- Text ---------- */
+  .text-gradient {
+    @apply bg-gradient-to-r from-indigo-600 via-violet-600 to-blue-600 bg-clip-text text-transparent;
+  }
+
+  /* ---------- Decorative ---------- */
+  .bg-grid-white {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .bg-noise-sheen {
+    background-image: linear-gradient(115deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 40%);
+  }
+}
+
+@layer utilities {
+  .interactive-card {
+    @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-soft-md cursor-pointer;
+  }
+
+  .glass-header {
+    @apply bg-white/75 backdrop-blur-xl border-b border-slate-200/70;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Recharts: remove default focus outline on click */
+.recharts-wrapper,
+.recharts-surface,
+.recharts-wrapper *:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
